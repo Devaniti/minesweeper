@@ -1,4 +1,5 @@
 #pragma once
+#include <vcclr.h>
 class TGameField
 {
 	class TField
@@ -18,10 +19,11 @@ class TGameField
 	bool gameover;
 	void generate(int x, int y);
 	bool Open(int x, int y);
+	void ReDraw(System::Windows::Forms::PictureBox^ image);
 public:
 	TGameField(int h, int w, int mines);
-	bool Click(int x, int y);
+	TGameField();
+	bool Click(int x, int y, System::Windows::Forms::PictureBox^ image);
 	void InitGraphics(System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Form^ form);
-	void Paint(System::Windows::Forms::PictureBox^ image);
 	bool GameOver();
 };

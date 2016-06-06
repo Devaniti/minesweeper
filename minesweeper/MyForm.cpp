@@ -6,7 +6,6 @@ using namespace System::Windows::Forms;
 void main(array<String^>^ arg) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-
 	minesweeper::MyForm form;
 	Application::Run(%form);
 }

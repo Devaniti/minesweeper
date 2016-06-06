@@ -12,33 +12,19 @@ using namespace System::Drawing;
 
 #define max(a,b) a>b?a:b
 
-class TGameField
-{
-	class TField
-	{
-		int* field;
-		int h, w;
-	public:
-		TField(int h, int w)
+
+		TGameField::TField::TField(int h, int w)
 		{
-			delete[] field;
 			field = new int[h*w];
 			this->h = h;
 			this->w = w;
 		}
-		TField() {}
-		int *operator[](int h)
+		TGameField::TField::TField() {}
+		int *TGameField::TField::operator[](int h)
 		{
 			return &field[this->h*h];
 		}
-	};
-	TField field;
-	TField visiblefield;
-	int h, w, mines;
-	int minesleft, squaresleft;
-	bool generated;
-	bool gameover;
-	void generate(int x, int y)
+	void TGameField::generate(int x, int y)
 	{
 		srand(time(NULL));
 		gameover = false;
@@ -47,6 +33,9 @@ class TGameField
 		for (int i = 0; i < h; i++)
 			for (int j = 0; j < w; j++)
 				visiblefield[i][j] = -2;
+		for (int i = 0; i < h; i++)
+			for (int j = 0; j < w; j++)
+				field[i][j] = 0;
 		field[x][y] = -1;
 		minesleft = 0;
 		while (minesleft < mines)
@@ -69,8 +58,9 @@ class TGameField
 							if (field[i1][j1] != -1) field[i1][j1]++;
 				}
 			}
+		generated = true;
 	}
-	bool Open(int x, int y)
+	bool TGameField::Open(int x, int y)
 	{
 		if (visiblefield[x][y] != -2) return true;
 		if (field[x][y] == -1) { visiblefield[x][y] = -1; return false; }
@@ -81,15 +71,60 @@ class TGameField
 					Open(i1, j1);
 		return true;
 	}
-public:
-	TGameField(int h, int w, int mines)
+	void TGameField::ReDraw(System::Windows::Forms::PictureBox^ image)
+	{
+		image->Image = gcnew Bitmap(w * 25, h * 25);
+		Font^ font = gcnew System::Drawing::Font(FontFamily::GenericSansSerif, 12.0F);
+		SolidBrush^ brush = gcnew SolidBrush(Color::Gray);
+		PointF start;
+		Graphics^ graphics = Graphics::FromImage(image->Image);
+
+		if (generated)
+			for (int i = 0; i < h; i++)
+				for (int j = 0; j < w; j++)
+				{
+					start.X = j * 25;
+					start.Y = i * 25;
+					switch(visiblefield[i][j])
+					{
+					case(-2):
+						brush->Color = Color::Gray;
+						break;
+					case(-1):
+						brush->Color = Color::DarkRed;
+						break;
+					case(1):
+						brush->Color = Color::Blue;
+						break;
+					case(2):
+						brush->Color = Color::Green;
+						break;
+					default:
+						brush->Color = Color::Red;
+						break;
+					}
+					if (visiblefield[i][j] != 0) 
+						graphics->DrawString(visiblefield[i][j] == -2 ? Convert::ToString("H") : Convert::ToString(visiblefield[i][j]), font, brush, start);
+				}
+		else
+			for (int i = 0; i < h; i++)
+				for (int j = 0; j < w; j++)
+				{
+					start.X = j * 25;
+					start.Y = i * 25;
+					graphics->DrawString(Convert::ToString("H"), font, brush, start);
+				}
+	}
+	TGameField::TGameField(int h, int w, int mines)
 	{
 		this->h = h;
 		this->w = w;
 		this->mines = mines;
 		generated = false;
+		gameover = false;
 	}
-	bool Click(int x, int y)
+	TGameField::TGameField() {};
+	bool TGameField::Click(int x, int y, System::Windows::Forms::PictureBox^ image)
 	{
 		if (!gameover)
 		{
@@ -98,24 +133,23 @@ public:
 			if (!Open(x, y))
 			{
 				gameover = true;
+				ReDraw(image);
 				return false;
 			}
+			ReDraw(image);
 			return true;
 		}
+		ReDraw(image);
 		return false;
 	}
-	void InitGraphics(System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Form^ form)
+	void TGameField::InitGraphics(System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Form^ form)
 	{
-		image->Width = w * 25;
-		image->Height = h * 25;
+		image->Height = w * 25;
+		image->Width = h * 25;
 		form->ClientSize = image->Size;
+		ReDraw(image);
 	}
-	void Paint(System::Windows::Forms::PictureBox^ image)
-	{
-		
-	}
-	bool GameOver()
+	bool TGameField::GameOver()
 	{
 		return gameover;
 	}
-};
