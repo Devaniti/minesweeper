@@ -58,6 +58,7 @@ namespace minesweeper {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
@@ -73,8 +74,6 @@ namespace minesweeper {
 			this->pictureBox1->Size = System::Drawing::Size(0, 0);
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
-			this->pictureBox1->ClientSizeChanged += gcnew System::EventHandler(this, &MyForm::pictureBox1_ClientSizeChanged);
-			this->pictureBox1->Click += gcnew System::EventHandler(this, &MyForm::pictureBox1_Click);
 			this->pictureBox1->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseClick);
 			this->pictureBox1->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseDoubleClick);
 			// 
@@ -129,8 +128,11 @@ namespace minesweeper {
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MinimizeBox = false;
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L"Minesweeper";
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
@@ -139,8 +141,7 @@ namespace minesweeper {
 #pragma endregion
 	private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
 	}
-	private: System::Void pictureBox1_Click(System::Object^  sender, System::EventArgs^  e) {
-	}
+
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		GameField = TGameField(9, 9, 10);
 		button1->Visible = false;
@@ -164,8 +165,7 @@ namespace minesweeper {
 		button3->Visible = false;
 		GameField.InitGraphics(pictureBox1, this);
 	}
-private: System::Void pictureBox1_ClientSizeChanged(System::Object^  sender, System::EventArgs^  e) {
-}
+
 private: System::Void pictureBox1_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 	int x, y;
 	System::Drawing::Rectangle screenRectangle = RectangleToScreen(this->ClientRectangle);
@@ -174,7 +174,9 @@ private: System::Void pictureBox1_MouseClick(System::Object^  sender, System::Wi
 	x /= 25;
 	y /= 25;
 	if (e->Button==System::Windows::Forms::MouseButtons::Left)
-		GameField.Click(x, y, pictureBox1, button4); else
+		GameField.Click(x, y, pictureBox1, button4);else
+	if (e->Button== System::Windows::Forms::MouseButtons::Middle)
+		GameField.SmartClick(x, y, pictureBox1, button4); else
 		GameField.RClick(x, y, pictureBox1);
 }
 private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {

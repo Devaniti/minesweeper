@@ -79,6 +79,52 @@ bool TGameField::Open(int x, int y)
 	return true;
 }
 
+void TGameField::ImageDraw(System::Windows::Forms::PictureBox ^ image, int x, int y, int cell)
+{
+	Graphics^ graphics = Graphics::FromImage(image->Image);
+	Image^ c;
+	switch(cell)
+	{
+	case(-3):
+		c = tm3;
+		break;
+	case(-2):
+		c = tm2;
+		break;
+	case(-1):
+		c = tm1;
+		break;
+	case(0):
+		c = t0;
+		break;
+	case(1):
+		c = t1;
+		break;
+	case(2):
+		c = t2;
+		break;
+	case(3):
+		c = t3;
+		break;
+	case(4):
+		c = t4;
+		break;
+	case(5):
+		c = t5;
+		break;
+	case(6):
+		c = t6;
+		break;
+	case(7):
+		c = t7;
+		break;
+	case(8):
+		c = t8;
+		break;
+	}
+	graphics->DrawImage(c,x,y,25,25);
+}
+
 void TGameField::ReDraw(System::Windows::Forms::PictureBox^ image)
 {
 	image->Image = gcnew Bitmap(w * 25, h * 25 + 25);
@@ -104,7 +150,8 @@ void TGameField::ReDraw(System::Windows::Forms::PictureBox^ image)
 	for (int i = 0; i < w; i++)
 		for (int j = 0; j < h; j++)
 		{
-			start.X = i * 25+3;
+			ImageDraw(image, 25 * i, 25 * j, visiblefield[i][j]);
+			/*start.X = i * 25+3;
 			start.Y = j * 25+3;
 			switch(visiblefield[i][j])
 			{
@@ -134,7 +181,7 @@ void TGameField::ReDraw(System::Windows::Forms::PictureBox^ image)
 					if (visiblefield[i][j]==-3)
 				graphics->DrawString(Convert::ToString("F"), font, brush, start);else
 				graphics->DrawString(Convert::ToString(visiblefield[i][j]), font, brush, start);
-			}
+			}*/
 		}
 }
 
@@ -224,6 +271,18 @@ bool TGameField::RClick(int x, int y, System::Windows::Forms::PictureBox^ image)
 
 void TGameField::InitGraphics(System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Form^ form)
 {
+	tm3 = Image::FromFile("-3.bmp");
+	tm2 = Image::FromFile("-2.bmp");
+	tm1 = Image::FromFile("-1.bmp");
+	t0 = Image::FromFile("0.bmp");
+	t1 = Image::FromFile("1.bmp");
+	t2 = Image::FromFile("2.bmp");
+	t3 = Image::FromFile("3.bmp");
+	t4 = Image::FromFile("4.bmp");
+	t5 = Image::FromFile("5.bmp");
+	t6 = Image::FromFile("6.bmp");
+	t7 = Image::FromFile("7.bmp");
+	t8 = Image::FromFile("8.bmp");
 	image->Height = h * 25 + 25;
 	image->Width = w * 25;
 	form->ClientSize = image->Size;
