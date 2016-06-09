@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <vcclr.h>
 class TGameField
 {
@@ -12,18 +12,20 @@ class TGameField
 		int *operator[](int h);
 	};
 	TField field;
-	TField visiblefield;
+	TField visiblefield;//-2 - not opened; -3 - flag
 	int h, w, mines;
-	int minesleft, squaresleft;
+	int minesleft, squaresleft, flagsleft;
 	bool generated;
-	bool gameover;
+	bool gameover,win;
 	void generate(int x, int y);
 	bool Open(int x, int y);
 	void ReDraw(System::Windows::Forms::PictureBox^ image);
 public:
 	TGameField(int h, int w, int mines);
 	TGameField();
-	bool Click(int x, int y, System::Windows::Forms::PictureBox^ image);
+	bool Click(int x, int y, System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Button^ button);
+	bool SmartClick(int x, int y, System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Button^ button);
+	bool RClick(int x, int y, System::Windows::Forms::PictureBox^ image);
 	void InitGraphics(System::Windows::Forms::PictureBox^ image, System::Windows::Forms::Form^ form);
 	bool GameOver();
 };

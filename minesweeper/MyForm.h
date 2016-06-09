@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "field.h"
 namespace minesweeper {
 
@@ -40,6 +40,7 @@ namespace minesweeper {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::Button^  button4;
 
 
 	protected:
@@ -61,6 +62,7 @@ namespace minesweeper {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->button4 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -73,6 +75,8 @@ namespace minesweeper {
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->ClientSizeChanged += gcnew System::EventHandler(this, &MyForm::pictureBox1_ClientSizeChanged);
 			this->pictureBox1->Click += gcnew System::EventHandler(this, &MyForm::pictureBox1_Click);
+			this->pictureBox1->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseClick);
+			this->pictureBox1->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseDoubleClick);
 			// 
 			// button1
 			// 
@@ -104,11 +108,23 @@ namespace minesweeper {
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
 			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(143, 224);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(75, 23);
+			this->button4->TabIndex = 4;
+			this->button4->Text = L"Restart";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Visible = false;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(301, 300);
+			this->Controls->Add(this->button4);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
@@ -124,13 +140,6 @@ namespace minesweeper {
 	private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
 	}
 	private: System::Void pictureBox1_Click(System::Object^  sender, System::EventArgs^  e) {
-		int x, y;
-		Rectangle screenRectangle = RectangleToScreen(this->ClientRectangle);
-		x = MousePosition.X - screenRectangle.X - pictureBox1->Left;
-		y = MousePosition.Y - screenRectangle.Y - pictureBox1->Top;
-		x /= 25;
-		y /= 25;
-		GameField.Click(y, x, pictureBox1);
 	}
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		GameField = TGameField(9, 9, 10);
@@ -156,6 +165,37 @@ namespace minesweeper {
 		GameField.InitGraphics(pictureBox1, this);
 	}
 private: System::Void pictureBox1_ClientSizeChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void pictureBox1_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	int x, y;
+	System::Drawing::Rectangle screenRectangle = RectangleToScreen(this->ClientRectangle);
+	x = MousePosition.X - screenRectangle.X - pictureBox1->Left;
+	y = MousePosition.Y - screenRectangle.Y - pictureBox1->Top;
+	x /= 25;
+	y /= 25;
+	if (e->Button==System::Windows::Forms::MouseButtons::Left)
+		GameField.Click(x, y, pictureBox1, button4); else
+		GameField.RClick(x, y, pictureBox1);
+}
+private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Width = 317;
+	this->Height = 339;
+	pictureBox1->Width = 1;
+	pictureBox1->Height = 1;
+	button1->Visible = true;
+	button2->Visible = true;
+	button3->Visible = true;
+	button4->Visible = false;
+}
+private: System::Void pictureBox1_MouseDoubleClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	int x, y;
+	System::Drawing::Rectangle screenRectangle = RectangleToScreen(this->ClientRectangle);
+	x = MousePosition.X - screenRectangle.X - pictureBox1->Left;
+	y = MousePosition.Y - screenRectangle.Y - pictureBox1->Top;
+	x /= 25;
+	y /= 25;
+	if (e->Button == System::Windows::Forms::MouseButtons::Left)
+		GameField.SmartClick(x, y, pictureBox1, button4);
 }
 };
 }
