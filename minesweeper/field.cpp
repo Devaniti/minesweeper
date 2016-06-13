@@ -132,11 +132,6 @@ void TGameField::ReDraw(System::Windows::Forms::PictureBox^ image)
 	SolidBrush^ brush = gcnew SolidBrush(Color::Black);
 	PointF start;
 	Graphics^ graphics = Graphics::FromImage(image->Image);
-	Pen^ pen = gcnew Pen(Color::Gray);
-	for (int i = 0; i <= w; i++)
-		graphics->DrawLine(pen, 25 * i, 0, 25 * i, 25 * h);
-	for (int j = 0; j <= h; j++)
-		graphics->DrawLine(pen, 0, 25*j, 25 * w, 25 * j);
 	start.X = 20;
 	start.Y = h * 25;
 	if (gameover)
@@ -151,37 +146,6 @@ void TGameField::ReDraw(System::Windows::Forms::PictureBox^ image)
 		for (int j = 0; j < h; j++)
 		{
 			ImageDraw(image, 25 * i, 25 * j, visiblefield[i][j]);
-			/*start.X = i * 25+3;
-			start.Y = j * 25+3;
-			switch(visiblefield[i][j])
-			{
-			case(-3):
-				brush->Color = Color::Red;
-				break;
-			case(-2):
-				brush->Color = Color::Gray;
-				break;
-			case(-1):
-				brush->Color = Color::DarkRed;
-				break;
-			case(1):
-				brush->Color = Color::Blue;
-				break;
-			case(2):
-				brush->Color = Color::Green;
-				break;
-			default:
-				brush->Color = Color::Red;
-				break;
-			}
-			if (visiblefield[i][j] != 0)
-			{
-				if (visiblefield[i][j]==-2)
-				graphics->DrawString(Convert::ToString("H"), font, brush, start);else
-					if (visiblefield[i][j]==-3)
-				graphics->DrawString(Convert::ToString("F"), font, brush, start);else
-				graphics->DrawString(Convert::ToString(visiblefield[i][j]), font, brush, start);
-			}*/
 		}
 }
 
