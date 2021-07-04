@@ -283,9 +283,9 @@ namespace minesweeper {
 	}
 	private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
 		int w, h, mines;
-		w = Convert::ToSingle(numericUpDown1->Value);
-		h = Convert::ToSingle(numericUpDown2->Value);
-		mines = Convert::ToSingle(numericUpDown3->Value);
+		w = Convert::ToInt32(numericUpDown1->Value);
+		h = Convert::ToInt32(numericUpDown2->Value);
+		mines = Convert::ToInt32(numericUpDown3->Value);
 		GameField = TGameField(w, h, mines);
 		HideButtons();
 		GameField.InitGraphics(pictureBox1, this);
